@@ -500,7 +500,7 @@ body {
   .smart-nav-menu {
     position: absolute;
     top: 75px;
-    right: 70px;
+    right: 76px;
     width: 80%;
     padding: 15px;
     border-radius: 22px;
@@ -572,7 +572,9 @@ body {
   .smart-navbar {
     width: calc(100% - 28px);
   }
-
+ .smart-nav-menu {
+    right: 43px;
+  }
   .smart-logo {
     min-width: auto;
   }
