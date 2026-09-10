@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("email").value.trim();
         const message = document.getElementById("message").value.trim();
 
-        const whatsappNumber = "966500000000";
+        const whatsappNumber = "966554021910";
 
         const text =
             "طلب جديد من الموقع%0A%0A" +
