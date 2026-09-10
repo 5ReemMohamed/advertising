@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("email").value.trim();
         const message = document.getElementById("message").value.trim();
 
-        const whatsappNumber = "966554021910";
+        const whatsappNumber = "966564014040";
 
         const text =
             "طلب جديد من الموقع%0A%0A" +
@@ -444,5 +444,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
         window.open(whatsappUrl, "_blank");
     });
+const smartNavbar = document.querySelector(".smart-navbar");
 
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 50) {
+        smartNavbar.classList.add("scrolled");
+    } else {
+        smartNavbar.classList.remove("scrolled");
+    }
+});
+const backToTop = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 400) {
+        backToTop.classList.add("show");
+    } else {
+        backToTop.classList.remove("show");
+    }
+});
+
+backToTop.addEventListener("click", () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
 });
