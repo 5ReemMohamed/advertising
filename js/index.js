@@ -169,27 +169,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
- const wrapper = document.getElementById("galleryWrapper");
-    const track = document.getElementById("galleryTrack");
-    const items = document.querySelectorAll(".gallery-item");
+const wrapper = document.getElementById("galleryWrapper");
+const track = document.getElementById("galleryTrack");
+const modalElement = document.getElementById("galleryModal");
+const modalImage = document.getElementById("modalGalleryImage");
 
-    const modalElement = document.getElementById("galleryModal");
-    const modalImage = document.getElementById("modalGalleryImage");
+if (wrapper && track && modalElement && modalImage) {
+
+    const originalItems = Array.from(
+        track.querySelectorAll(".gallery-item")
+    );
 
     const galleryModal = new bootstrap.Modal(modalElement);
+
+    originalItems.forEach(function (item) {
+        const clone = item.cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        track.appendChild(clone);
+    });
 
     let isDragging = false;
     let startX = 0;
     let scrollStart = 0;
     let hasMoved = false;
-
-    const originalItems = Array.from(items);
-
-    originalItems.forEach(item => {
-        const clone = item.cloneNode(true);
-        clone.setAttribute("aria-hidden", "true");
-        track.appendChild(clone);
-    });
 
     function getPageX(event) {
         if (event.touches && event.touches.length) {
@@ -204,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startDrag(event) {
-
         isDragging = true;
         hasMoved = false;
 
@@ -213,11 +214,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         wrapper.classList.add("grabbing");
 
-        track.classList.remove("gallery-auto-scroll");
+        track.style.animationPlayState = "paused";
     }
 
     function moveDrag(event) {
-
         if (!isDragging) {
             return;
         }
@@ -237,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function endDrag() {
-
         if (!isDragging) {
             return;
         }
@@ -246,30 +245,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
         wrapper.classList.remove("grabbing");
 
-        setTimeout(() => {
-            if (!isDragging) {
-                track.classList.add("gallery-auto-scroll");
-            }
-        }, 100);
+        if (!wrapper.matches(":hover")) {
+            track.style.animationPlayState = "running";
+        }
+
+        setTimeout(function () {
+            hasMoved = false;
+        }, 150);
     }
 
     wrapper.addEventListener("mousedown", startDrag);
     wrapper.addEventListener("mousemove", moveDrag);
     wrapper.addEventListener("mouseup", endDrag);
-    wrapper.addEventListener("mouseleave", endDrag);
-
-    wrapper.addEventListener("touchstart", startDrag, {
-        passive: true
+    wrapper.addEventListener("mouseleave", function () {
+        endDrag();
+        track.style.animationPlayState = "running";
     });
 
-    wrapper.addEventListener("touchmove", moveDrag, {
-        passive: false
-    });
+    wrapper.addEventListener(
+        "touchstart",
+        startDrag,
+        {
+            passive: true
+        }
+    );
 
-    wrapper.addEventListener("touchend", endDrag);
+    wrapper.addEventListener(
+        "touchmove",
+        moveDrag,
+        {
+            passive: false
+        }
+    );
+
+    wrapper.addEventListener(
+        "touchend",
+        endDrag
+    );
 
     wrapper.addEventListener("mouseenter", function () {
-        track.style.animationPlayState = "paused";
+        if (!isDragging) {
+            track.style.animationPlayState = "paused";
+        }
     });
 
     wrapper.addEventListener("mouseleave", function () {
@@ -278,31 +295,43 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    document.querySelectorAll(".gallery-item").forEach(item => {
+    track.addEventListener("click", function (event) {
 
-        item.addEventListener("click", function () {
+        if (hasMoved) {
+            return;
+        }
 
-            if (hasMoved) {
-                return;
-            }
+        const item = event.target.closest(".gallery-item");
 
-            const image = this.querySelector("img");
+        if (!item) {
+            return;
+        }
 
-            if (!image) {
-                return;
-            }
+        const image = item.querySelector("img");
 
-            modalImage.src = image.src;
-            modalImage.alt = image.alt;
+        if (!image) {
+            return;
+        }
 
-            galleryModal.show();
-        });
+        track.style.animationPlayState = "paused";
 
+        modalImage.src = image.src;
+        modalImage.alt = image.alt || "";
+
+        galleryModal.show();
     });
 
-    modalElement.addEventListener("hidden.bs.modal", function () {
-        modalImage.src = "";
-    });
+    modalElement.addEventListener(
+        "hidden.bs.modal",
+        function () {
+            modalImage.src = "";
+
+            if (!wrapper.matches(":hover")) {
+                track.style.animationPlayState = "running";
+            }
+        }
+    );
+}
       const section = document.querySelector(".why-us-section");
     const counter = document.querySelector(".counter");
 
