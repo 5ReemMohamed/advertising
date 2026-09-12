@@ -5049,3 +5049,10 @@ svg {
         font-size: 22px;
     }
 }
+.product-gallery .image-wrapper{
+  height: 400px;
+}
+.product-gallery .image-wrapper img{
+height: 100%;
+object-fit: contain;
+}
