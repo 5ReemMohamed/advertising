@@ -5051,8 +5051,11 @@ svg {
 }
 .product-gallery .image-wrapper{
   height: 400px;
+  border-radius: 30px !important;
+
 }
 .product-gallery .image-wrapper img{
 height: 100%;
 object-fit: contain;
+border-radius: 30px !important;
 }
